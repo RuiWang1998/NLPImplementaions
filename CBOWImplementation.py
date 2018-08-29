@@ -6,6 +6,7 @@ import numpy as np
 
 torch.manual_seed(1)
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 CONTEXT_SIZE = 2  # 2 words to the left, 2 to the right
 EMBED_DIM = 200
 
@@ -19,7 +20,7 @@ we conjure the spirits of the computer with our spells.""".split()
 # By deriving a set from `raw_text`, we deduplicate the array
 vocab = set(raw_text)
 vocab_size = len(vocab)
-EPOCH = 15
+EPOCH = 30
 
 word_to_ix = {word: i for i, word in enumerate(vocab)}
 data = []
@@ -42,7 +43,7 @@ class CBOW(nn.Module):
         
 
     def forward(self, inputs):
-        embeds = self.embeddings(inputs)
+        embeds = self.embeddings(inputs.to(device))
         output = embeds.sum(dim=0)
         output = self.lc(output)
 
@@ -55,15 +56,19 @@ class CBOW(nn.Module):
 
 def make_context_vector(context, word_to_ix):
     idxs = [word_to_ix[w] for w in context]
-    return torch.tensor(idxs, dtype=torch.long)
+    context_vector = torch.tensor(idxs, dtype=torch.long)
+    return context_vector
 
 
 make_context_vector(data[0][0], word_to_ix)  # example
 
 loss_func = nn.CrossEntropyLoss()
 net = CBOW()
-print(net)
-optimizer = optim.SGD(net.parameters(), lr=0.01)
+net.to(device)
+optimizer = optim.Adam(net.parameters(), lr=0.01, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=True)
+
+#for param in net.parameters():
+#    print(param)
 
 for context, target in data:
     context_inx = make_context_vector(context, word_to_ix)
@@ -76,13 +81,13 @@ for epoch in range(EPOCH):
         net.zero_grad()
         probs = net(context_inx)
         loss = nn.CrossEntropyLoss()
-        loss = loss_func(probs.view(1,-1), torch.tensor([word_to_ix[target]]))
-        print('The cross entropy loss value is {}'.format(loss))
+        loss = loss_func(probs.view(1,-1), torch.tensor([word_to_ix[target]], device = device))
+        # print('The cross entropy loss value is {}'.format(loss))
         loss.backward()
         optimizer.step()
 
         loss_total += loss.data
-
+    print('The cross entropy loss value is {}'.format(loss_total))
 
 
 def ix_to_word(ix):
@@ -98,7 +103,7 @@ def ix_to_word(ix):
 # testing
 context = ['are','about','study', 'the']
 context_vector = make_context_vector(context, word_to_ix)
-a = net(context_vector).data.numpy()
+a = torch.Tensor.cpu(net(context_vector)).data.numpy()
 print('Raw text: {}\n'.format(' '.join(raw_text)))
 print('Context: {}\n'.format(context))
 print('Prediction: {}'.format(ix_to_word(a.argmax())))
