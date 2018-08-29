@@ -6,9 +6,13 @@ import numpy as np
 
 torch.manual_seed(1)
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 CONTEXT_SIZE = 2  # 2 words to the left, 2 to the right
-EMBED_DIM = 200
+# One of the reasons why this continuous embedding is better is that it needs fewer dimensions of representation 
+# Empirically 10 dimensions work well for the little text that we have with training epoch of 30
+EMBED_DIM = 10 
+EPOCH = 30
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 raw_text = """We are about to study the idea of a computational process.
 Computational processes are abstract beings that inhabit computers.
@@ -20,7 +24,6 @@ we conjure the spirits of the computer with our spells.""".split()
 # By deriving a set from `raw_text`, we deduplicate the array
 vocab = set(raw_text)
 vocab_size = len(vocab)
-EPOCH = 30
 
 word_to_ix = {word: i for i, word in enumerate(vocab)}
 data = []
