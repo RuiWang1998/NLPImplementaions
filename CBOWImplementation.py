@@ -33,7 +33,6 @@ for i in range(2, len(raw_text) - 2):
     target = raw_text[i]
     data.append((context, target))
 
-
 class CBOW(nn.Module):
 
     def __init__(self):
@@ -68,10 +67,6 @@ optimizer = optim.Adam(net.parameters(), lr=0.01, betas=(0.9, 0.999), eps=1e-08,
 
 #for param in net.parameters():
 #    print(param)
-
-for context, target in data:
-    context_inx = make_context_vector(context, word_to_ix)
-    output = net(context_inx)
 
 for epoch in range(EPOCH):
     loss_total = 0
