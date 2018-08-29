@@ -36,7 +36,6 @@ for i in range(2, len(raw_text) - 2):
 
 class CBOW(nn.Module):
 
-
     def __init__(self):
         super(CBOW, self).__init__()
         self.embed_dim = EMBED_DIM
@@ -44,24 +43,21 @@ class CBOW(nn.Module):
         self.embeddings = nn.Embedding(vocab_size, self.embed_dim)
         self.lc = nn.Linear(self.embed_dim, vocab_size, bias=True)
         
-
     def forward(self, inputs):
         embeds = self.embeddings(inputs.to(device))
         output = embeds.sum(dim=0)
         output = self.lc(output)
-
+        
         return output
 
 
 # create your model and train.  here are some functions to help you make
 # the data ready for use by your module
 
-
 def make_context_vector(context, word_to_ix):
     idxs = [word_to_ix[w] for w in context]
     context_vector = torch.tensor(idxs, dtype=torch.long)
     return context_vector
-
 
 make_context_vector(data[0][0], word_to_ix)  # example
 
@@ -92,7 +88,6 @@ for epoch in range(EPOCH):
         loss_total += loss.data
     print('The cross entropy loss value is {}'.format(loss_total))
 
-
 def ix_to_word(ix):
     vocab_list = list(word_to_ix.keys())
     word_predicted = vocab_list[0]
@@ -102,7 +97,6 @@ def ix_to_word(ix):
 
     return word_predicted
 
-
 # testing
 context = ['are','about','study', 'the']
 context_vector = make_context_vector(context, word_to_ix)
@@ -111,6 +105,7 @@ print('Raw text: {}\n'.format(' '.join(raw_text)))
 print('Context: {}\n'.format(context))
 print('Prediction: {}'.format(ix_to_word(a.argmax())))
 
-# output the parameters
+# output the parameters, where the first set is the embeddings set in the neural network 
+# while the second set is the weights of the linear layer and the third set is the bias of the linear layer
 for param in net.parameters():
     print(param)
