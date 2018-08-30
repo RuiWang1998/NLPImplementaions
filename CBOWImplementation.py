@@ -74,7 +74,6 @@ for epoch in range(EPOCH):
         context_inx = make_context_vector(context, word_to_ix)
         net.zero_grad()
         probs = net(context_inx)
-        loss = nn.CrossEntropyLoss()
         loss = loss_func(probs.view(1,-1), torch.tensor([word_to_ix[target]], device = device))
         # print('The cross entropy loss value is {}'.format(loss))
         loss.backward()
