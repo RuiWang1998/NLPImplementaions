@@ -44,7 +44,7 @@ class CBOW(nn.Module):
         
     def forward(self, inputs):
         embeds = self.embeddings(inputs.to(device))
-        output = embeds.sum(dim=0)
+        output = embeds.sum(dim=0) / self.context_size
         output = self.lc(output)
         
         return output
