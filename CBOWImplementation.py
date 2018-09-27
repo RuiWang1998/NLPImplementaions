@@ -3,16 +3,25 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+import pickle, gzip
+
+def getData(fileName):
+    with gzip.open(fileName, 'rb') as f:
+        trDat, valDat, testD = pickle.load(f, encoding='latin1')
+    return (trDat, valDat, testD)
 
 torch.manual_seed(1)
 
 CONTEXT_SIZE = 2  # 2 words to the left, 2 to the right
 # One of the reasons why this continuous embedding is better is that it needs fewer dimensions of representation 
 # Empirically 10 dimensions work well for the little text that we have with training epoch of 30
-EMBED_DIM = 10 
+EMBED_DIM = 10
 EPOCH = 30
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+trDat, valDat, testD = getData("../mnist.pkl.gz")
 
 raw_text = """We are about to study the idea of a computational process.
 Computational processes are abstract beings that inhabit computers.
