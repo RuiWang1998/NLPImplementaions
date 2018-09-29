@@ -14,9 +14,6 @@ EPOCH = 30
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
-trDat, valDat, testD = getData("../mnist.pkl.gz")
-
 raw_text = """We are about to study the idea of a computational process.
 Computational processes are abstract beings that inhabit computers.
 As they evolve, processes manipulate other abstract things called data.
