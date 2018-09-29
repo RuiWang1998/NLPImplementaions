@@ -3,12 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-import pickle, gzip
-
-def getData(fileName):
-    with gzip.open(fileName, 'rb') as f:
-        trDat, valDat, testD = pickle.load(f, encoding='latin1')
-    return (trDat, valDat, testD)
 
 torch.manual_seed(1)
 
