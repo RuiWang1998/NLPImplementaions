@@ -85,6 +85,14 @@ rebirth the actress told PEOPLE in November 2015 about leaving Scientology I am 
 appearance on Remini’s A&E series Scientology and the Aftermath series last year where he discussed his departure from the church in 2009 after 35 years as a member
 """.split()
 
+raw_text = """We are about to study the idea of a computational process.
+Computational processes are abstract beings that inhabit computers.
+As they evolve, processes manipulate other abstract things called data.
+The evolution of a process is directed by a pattern of rules
+called a program. People create programs to direct processes. In effect,
+we conjure the spirits of the computer with our spells.""".split()
+
+
 # By deriving a set from `raw_text`, we deduplicate the array
 vocab = set(raw_text)
 vocab_size = len(vocab)
