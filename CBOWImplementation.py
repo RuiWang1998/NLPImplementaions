@@ -10,12 +10,12 @@ torch.manual_seed(1)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 CONTEXT_SIZE = 5  # 2 words to the left, 2 to the right
-EMBED_DIM = 100
-EPOCH = 30
+EMBED_DIM = 5
+EPOCH = 3000
 
 raw_text = """We are about to study the idea of a computational process.
 Computational processes are abstract beings that inhabit computers.
-As they evolve, processes manipulate other abstract things called data.
+As they evolve, processes manipulate other abstract things called dat5
 The evolution of a process is directed by a pattern of rules
 called a program. People create programs to direct processes. In effect,
 we conjure the spirits of the computer with our spells.""".split()
@@ -87,8 +87,8 @@ for epoch in range(EPOCH):
         optimizer.step()
 
         loss_total += loss.data
-    print('Epoch: {} |The cross entropy loss value is {}'.format(epoch + 1, loss_total))
-
+    
+print('Epoch: {} |The cross entropy loss value is {}'.format(epoch + 1, loss_total))
 
 def ix_to_word(ix):
     vocab_list = list(word_to_ix.keys())
@@ -111,10 +111,11 @@ np.savetxt("vectors.csv", word2numpy, delimiter=",")
 print("The vacabulary size is {}.".format(vocab_size));
 
 ## testing
-context = ['couple','even','to', 'stay']
+context = ['the','idea','a', 'abstract']
 context_vector = make_context_vector(context, word_to_ix)
 a = torch.Tensor.cpu(net(context_vector)).data.numpy()
 print('Context: {}\n'.format(context))
 print('Prediction: {}'.format(ix_to_word(a.argmax())))
 end = time.time()
 print("Time elapsed: {}".format(end - start))
+print(device)
